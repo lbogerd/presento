@@ -1,10 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type ChangeEvent,
+} from "react";
 import { SlideViewer } from "./components/SlideViewer";
 import { SlideEditor } from "./components/SlideEditor";
 import { SlideList } from "./components/SlideList";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { Slide } from "./types";
-import { Play, X } from "lucide-react";
+import { Play, X, Upload, Download } from "lucide-react";
 
 const INITIAL_SLIDES: Slide[] = [
   {
@@ -22,7 +28,7 @@ const INITIAL_SLIDES: Slide[] = [
       "Real-time preview",
       "Dark mode support",
       "Local storage persistence",
-      "Export to JSON (coming soon)",
+      "Manual JSON import/export",
     ],
   },
   {
@@ -45,6 +51,7 @@ function App() {
     () => slides[0]?.id ?? INITIAL_SLIDES[0].id
   );
   const [isPresenting, setIsPresenting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeSlideIndex = slides.findIndex((s) => s.id === activeSlideId);
   const activeSlide = slides[activeSlideIndex];
@@ -91,6 +98,62 @@ function App() {
       setActiveSlideId(slides[activeSlideIndex - 1].id);
     }
   }, [activeSlideIndex, slides]);
+
+  const handleExportSlides = () => {
+    const payload = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      slides,
+    };
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    downloadLink.download = `presento-slides-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportSlides = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const importedSlides = Array.isArray(parsed)
+        ? parsed
+        : Array.isArray(parsed.slides)
+        ? parsed.slides
+        : null;
+
+      if (!importedSlides || importedSlides.length === 0) {
+        throw new Error("No slides found in file");
+      }
+
+      const sanitizedSlides: Slide[] = importedSlides.map((slide: Slide) => ({
+        ...slide,
+        id: slide.id || crypto.randomUUID(),
+      }));
+
+      setSlides(sanitizedSlides);
+      setActiveSlideId(sanitizedSlides[0].id);
+    } catch (error) {
+      console.error(error);
+      window.alert(
+        "Failed to import slides. Please verify the JSON file and try again."
+      );
+    } finally {
+      event.target.value = "";
+    }
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -183,6 +246,27 @@ function App() {
             Presento
           </h1>
           <div className="flex items-center gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/json"
+              className="hidden"
+              onChange={handleImportSlides}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 px-4 py-2 bg-(--color-panel) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            >
+              <Upload size={16} strokeWidth={3} />
+              Import JSON
+            </button>
+            <button
+              onClick={handleExportSlides}
+              className="flex items-center gap-2 px-4 py-2 bg-(--color-panel) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            >
+              <Download size={16} strokeWidth={3} />
+              Export JSON
+            </button>
             <button
               onClick={() => setIsPresenting(true)}
               className="flex items-center gap-2 px-6 py-2 bg-(--color-danger) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-text) hover:text-(--color-danger) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_var(--shadow-soft)] cursor-pointer"
