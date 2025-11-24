@@ -12,7 +12,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
   isActive = true,
 }) => {
   const baseClasses =
-    "w-full h-full flex flex-col p-16 bg-white dark:bg-black text-black dark:text-white transition-all duration-500 overflow-hidden font-mono";
+    "w-full h-full flex flex-col p-16 bg-(--color-surface) text-(--color-text) transition-all duration-500 overflow-hidden font-mono";
 
   const renderContent = () => {
     switch (slide.layout) {
@@ -23,7 +23,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
               {slide.title}
             </h1>
             {slide.content && (
-              <p className="text-3xl font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              <p className="text-3xl font-bold text-(--color-text-muted) uppercase tracking-wide">
                 {slide.content}
               </p>
             )}
@@ -33,7 +33,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
       case "bullets":
         return (
           <div className="flex flex-col h-full space-y-8">
-            <h2 className="text-5xl font-black border-b-4 pb-4 border-black dark:border-white uppercase tracking-tight">
+            <h2 className="text-5xl font-black border-b-4 pb-4 border-(--color-border) uppercase tracking-tight">
               {slide.title}
             </h2>
             <ul className="list-disc list-inside space-y-4 text-2xl pl-4 font-bold">
@@ -41,7 +41,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
                 slide.content.map((item, idx) => (
                   <li
                     key={idx}
-                    className="leading-relaxed marker:text-black dark:marker:text-white"
+                    className="leading-relaxed marker:text-(--color-text)"
                   >
                     {item}
                   </li>
@@ -57,7 +57,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
         return (
           <div className="flex flex-col h-full items-center justify-center space-y-6 relative">
             {slide.title && (
-              <h2 className="text-4xl font-black absolute top-12 uppercase tracking-tight z-10 bg-white/90 dark:bg-black/90 px-4 py-2 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
+              <h2 className="text-4xl font-black absolute top-12 uppercase tracking-tight z-10 bg-(--color-surface)/90 px-4 py-2 border-2 border-(--color-border) shadow-[4px_4px_0px_0px_var(--shadow-soft)]">
                 {slide.title}
               </h2>
             )}
@@ -72,7 +72,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
                   src={slide.image}
                   alt={slide.title || "Slide image"}
                   className={clsx(
-                    "max-h-[70vh] max-w-full border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]",
+                    "max-h-[70vh] max-w-full border-4 border-(--color-border) shadow-[8px_8px_0px_0px_var(--shadow-soft)]",
                     slide.imageFit === "cover"
                       ? "object-cover"
                       : slide.imageFit === "fill"
@@ -83,7 +83,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
               </div>
             )}
             {typeof slide.content === "string" && (
-              <p className="text-xl font-bold text-gray-500 uppercase z-10 bg-white/90 dark:bg-black/90 px-2">
+              <p className="text-xl font-bold text-(--color-text-muted) uppercase z-10 bg-(--color-surface)/90 px-2">
                 {slide.content}
               </p>
             )}
@@ -96,7 +96,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
             <h2 className="text-4xl font-black uppercase tracking-tight">
               {slide.title}
             </h2>
-            <pre className="flex-1 bg-gray-100 dark:bg-gray-900 p-6 border-4 border-black dark:border-white overflow-auto text-sm font-mono shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
+            <pre className="flex-1 bg-(--color-panel) p-6 border-4 border-(--color-border) overflow-auto text-sm font-mono shadow-[8px_8px_0px_0px_var(--shadow-soft)]">
               <code>{slide.code || slide.content}</code>
             </pre>
           </div>

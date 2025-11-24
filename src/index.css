@@ -1,23 +1,52 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 :root {
   font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
-  
+
   color-scheme: light dark;
-  background-color: #ffffff;
-  color: #0f172a;
+  --color-bg: #f5f1eb;
+  --color-surface: #fcfaf5;
+  --color-surface-muted: #f0ebe0;
+  --color-panel: #e5dfd3;
+  --color-border: #4e4637;
+  --color-text: #1f232f;
+  --color-text-muted: #4f5663;
+  --color-accent: #efbf83;
+  --color-accent-strong: #e79a6c;
+  --color-positive: #b1d89a;
+  --color-danger: #ef8f7e;
+  --shadow-strong: rgba(50, 40, 28, 0.45);
+  --shadow-soft: rgba(50, 40, 28, 0.25);
+
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    background-color: #0f172a;
-    color: #f8fafc;
+    --color-bg: #101522;
+    --color-surface: #171d29;
+    --color-surface-muted: #1f2635;
+    --color-panel: #262f40;
+    --color-border: #7f899f;
+    --color-text: #f2ede1;
+    --color-text-muted: #c8c3b9;
+    --color-accent: #f2c98d;
+    --color-accent-strong: #f09f73;
+    --color-positive: #8fc59c;
+    --color-danger: #f29a8a;
+    --shadow-strong: rgba(0, 0, 0, 0.45);
+    --shadow-soft: rgba(0, 0, 0, 0.25);
+
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 }
 
@@ -25,4 +54,6 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }

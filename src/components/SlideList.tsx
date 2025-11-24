@@ -70,16 +70,16 @@ const SortableSlide: React.FC<SortableSlideProps> = ({
       className={clsx(
         "group relative flex items-center gap-3 p-3 cursor-pointer transition-none border-2",
         activeSlideId === slide.id
-          ? "bg-[#FFF500] border-black text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5"
-          : "bg-white dark:bg-black border-black dark:border-white text-black dark:text-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:-translate-x-0.5 hover:-translate-y-0.5"
+          ? "bg-(--color-accent) border-(--color-border) text-(--color-text) shadow-[4px_4px_0px_0px_var(--shadow-strong)] -translate-x-0.5 -translate-y-0.5"
+          : "bg-(--color-surface) border-(--color-border) text-(--color-text) hover:bg-(--color-panel) hover:shadow-[4px_4px_0px_0px_var(--shadow-soft)] hover:-translate-x-0.5 hover:-translate-y-0.5"
       )}
     >
       <span
         className={clsx(
-          "text-xs font-bold font-mono w-6 h-6 flex items-center justify-center border-2 border-black",
+          "text-xs font-bold font-mono w-6 h-6 flex items-center justify-center border-2 border-(--color-border)",
           activeSlideId === slide.id
-            ? "bg-black text-white"
-            : "bg-gray-200 text-black"
+            ? "bg-(--color-text) text-(--color-surface)"
+            : "bg-(--color-surface-muted) text-(--color-text)"
         )}
       >
         {index + 1}
@@ -96,7 +96,7 @@ const SortableSlide: React.FC<SortableSlideProps> = ({
           e.stopPropagation();
           onDelete(slide.id);
         }}
-        className="opacity-0 group-hover:opacity-100 p-1.5 text-black dark:text-white hover:bg-red-500 hover:text-white border-2 border-transparent hover:border-black transition-none"
+        className="opacity-0 group-hover:opacity-100 p-1.5 text-(--color-text) hover:bg-(--color-danger) hover:text-(--color-text) border-2 border-transparent hover:border-(--color-border) transition-none"
         onPointerDown={(e) => e.stopPropagation()}
       >
         <Trash2 size={14} strokeWidth={3} />
@@ -135,21 +135,21 @@ export const SlideList: React.FC<SlideListProps> = ({
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-black border-r-4 border-black dark:border-white w-72">
-      <div className="p-4 border-b-4 border-black dark:border-white flex justify-between items-center bg-[#f0f0f0] dark:bg-[#1a1a1a]">
-        <h2 className="font-bold text-black dark:text-white uppercase tracking-wider">
+    <div className="flex flex-col h-full bg-(--color-surface) border-r-4 border-(--color-border) w-72">
+      <div className="p-4 border-b-4 border-(--color-border) flex justify-between items-center bg-(--color-panel)">
+        <h2 className="font-bold text-(--color-text) uppercase tracking-wider">
           Slides
         </h2>
         <button
           onClick={onAdd}
-          className="p-2 bg-[#88FF88] border-2 border-black text-black hover:bg-black hover:text-[#88FF88] transition-none shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+          className="p-2 bg-(--color-positive) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-text) hover:text-(--color-positive) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
           title="Add Slide"
         >
           <Plus size={20} strokeWidth={3} />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8f8f8] dark:bg-[#111]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-(--color-panel)">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

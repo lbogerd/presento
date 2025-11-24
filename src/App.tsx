@@ -42,16 +42,9 @@ function App() {
     INITIAL_SLIDES
   );
   const [activeSlideId, setActiveSlideId] = useState<string>(
-    INITIAL_SLIDES[0].id
+    () => slides[0]?.id ?? INITIAL_SLIDES[0].id
   );
   const [isPresenting, setIsPresenting] = useState(false);
-
-  // Ensure activeSlideId is valid
-  useEffect(() => {
-    if (slides.length > 0 && !slides.find((s) => s.id === activeSlideId)) {
-      setActiveSlideId(slides[0].id);
-    }
-  }, [slides, activeSlideId]);
 
   const activeSlideIndex = slides.findIndex((s) => s.id === activeSlideId);
   const activeSlide = slides[activeSlideIndex];
@@ -117,16 +110,16 @@ function App() {
 
   if (isPresenting) {
     return (
-      <div className="fixed inset-0 bg-white dark:bg-black z-50 flex flex-col font-mono">
+      <div className="fixed inset-0 bg-(--color-surface) text-(--color-text) z-50 flex flex-col font-mono">
         {/* Main Slide Area */}
         <div className="flex-1 relative overflow-hidden">
           {activeSlide && <SlideViewer slide={activeSlide} isActive={true} />}
         </div>
 
         {/* Progress Bar */}
-        <div className="h-2 bg-gray-200 dark:bg-gray-800 w-full border-t-4 border-black dark:border-white">
+        <div className="h-2 bg-(--color-surface-muted) w-full border-t-4 border-(--color-border)">
           <div
-            className="h-full bg-[#FFF500]"
+            className="h-full bg-(--color-accent)"
             style={{
               width: `${((activeSlideIndex + 1) / slides.length) * 100}%`,
             }}
@@ -134,11 +127,11 @@ function App() {
         </div>
 
         {/* Bottom Control Bar */}
-        <div className="h-20 bg-white dark:bg-black border-t-4 border-black dark:border-white flex items-center justify-between px-6 shrink-0">
+        <div className="h-20 bg-(--color-surface) border-t-4 border-(--color-border) flex items-center justify-between px-6 shrink-0">
           {/* Left: Slide Counter */}
-          <div className="font-bold text-xl text-black dark:text-white">
+          <div className="font-bold text-xl text-(--color-text)">
             SLIDE {activeSlideIndex + 1}{" "}
-            <span className="text-gray-400">/ {slides.length}</span>
+            <span className="text-(--color-text-muted)">/ {slides.length}</span>
           </div>
 
           {/* Center: Controls */}
@@ -146,14 +139,14 @@ function App() {
             <button
               onClick={prevSlide}
               disabled={activeSlideIndex === 0}
-              className="px-6 py-2 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+              className="px-6 py-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-panel) disabled:opacity-50 disabled:cursor-not-allowed transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
             >
               PREV
             </button>
             <button
               onClick={nextSlide}
               disabled={activeSlideIndex === slides.length - 1}
-              className="px-6 py-2 bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+              className="px-6 py-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-panel) disabled:opacity-50 disabled:cursor-not-allowed transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
             >
               NEXT
             </button>
@@ -162,7 +155,7 @@ function App() {
           {/* Right: Exit */}
           <button
             onClick={() => setIsPresenting(false)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#FF5D5D] border-2 border-black text-black font-bold hover:bg-black hover:text-[#FF5D5D] transition-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-(--color-danger) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-text) hover:text-(--color-danger) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
           >
             <X size={20} strokeWidth={3} />
             EXIT
@@ -173,7 +166,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-[#f0f0f0] dark:bg-[#1a1a1a] text-black dark:text-white overflow-hidden font-mono">
+    <div className="flex h-screen bg-(--color-bg) text-(--color-text) overflow-hidden font-mono">
       <SlideList
         slides={slides}
         activeSlideId={activeSlideId}
@@ -185,14 +178,14 @@ function App() {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Toolbar */}
-        <div className="h-16 border-b-4 border-black dark:border-white flex items-center justify-between px-6 bg-white dark:bg-black">
+        <div className="h-16 border-b-4 border-(--color-border) flex items-center justify-between px-6 bg-(--color-surface)">
           <h1 className="font-black text-2xl uppercase tracking-tighter">
             Presento
           </h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsPresenting(true)}
-              className="flex items-center gap-2 px-6 py-2 bg-[#FF5D5D] border-2 border-black text-black font-bold uppercase hover:bg-black hover:text-[#FF5D5D] transition-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
+              className="flex items-center gap-2 px-6 py-2 bg-(--color-danger) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-text) hover:text-(--color-danger) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_var(--shadow-soft)] cursor-pointer"
             >
               <Play size={16} strokeWidth={3} />
               Present
@@ -203,12 +196,12 @@ function App() {
         {/* Main Content Area */}
         <div className="flex-1 flex overflow-hidden">
           {/* Slide Preview */}
-          <div className="flex-1 bg-[#e0e0e0] dark:bg-[#2a2a2a] p-8 flex items-center justify-center overflow-hidden relative">
-            <div className="aspect-video w-full max-w-5xl bg-white dark:bg-black border-4 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] overflow-hidden relative">
+          <div className="flex-1 bg-(--color-surface-muted) p-8 flex items-center justify-center overflow-hidden relative">
+            <div className="aspect-video w-full max-w-5xl bg-(--color-surface) border-4 border-(--color-border) shadow-[12px_12px_0px_0px_var(--shadow-strong)] overflow-hidden relative">
               {activeSlide ? (
                 <SlideViewer slide={activeSlide} isActive={true} />
               ) : (
-                <div className="flex items-center justify-center h-full text-slate-400 font-bold uppercase">
+                <div className="flex items-center justify-center h-full text-(--color-text-muted) font-bold uppercase">
                   Select a slide to edit
                 </div>
               )}
@@ -216,7 +209,7 @@ function App() {
           </div>
 
           {/* Editor Sidebar */}
-          <div className="w-96 border-l-4 border-black dark:border-white bg-white dark:bg-black">
+          <div className="w-96 border-l-4 border-(--color-border) bg-(--color-surface)">
             {activeSlide && (
               <SlideEditor slide={activeSlide} onUpdate={handleUpdateSlide} />
             )}
