@@ -10,7 +10,7 @@ import { SlideEditor } from "./components/SlideEditor";
 import { SlideList } from "./components/SlideList";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { Slide } from "./types";
-import { Play, X, Upload, Download } from "lucide-react";
+import { Play, X } from "lucide-react";
 
 const INITIAL_SLIDES: Slide[] = [
   {
@@ -55,7 +55,6 @@ function App() {
     () => slides[0]?.id ?? INITIAL_SLIDES[0].id
   );
   const [isPresenting, setIsPresenting] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeSlideIndex = slides.findIndex((s) => s.id === activeSlideId);
   const activeSlide = slides[activeSlideIndex];
@@ -254,6 +253,8 @@ function App() {
         onAdd={handleAddSlide}
         onDelete={handleDeleteSlide}
         onReorder={handleReorder}
+        onImport={handleImportSlides}
+        onExport={handleExportSlides}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -263,27 +264,6 @@ function App() {
             Presento
           </h1>
           <div className="flex items-center gap-2">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="application/json"
-              className="hidden"
-              onChange={handleImportSlides}
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-2 px-4 py-2 bg-(--color-panel) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
-            >
-              <Upload size={16} strokeWidth={3} />
-              Import JSON
-            </button>
-            <button
-              onClick={handleExportSlides}
-              className="flex items-center gap-2 px-4 py-2 bg-(--color-panel) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
-            >
-              <Download size={16} strokeWidth={3} />
-              Export JSON
-            </button>
             <button
               onClick={() => setIsPresenting(true)}
               className="flex items-center gap-2 px-6 py-2 bg-(--color-danger) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-text) hover:text-(--color-danger) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_var(--shadow-soft)] cursor-pointer"

@@ -1,6 +1,6 @@
 import React from "react";
 import type { Slide } from "../types";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Upload, Download } from "lucide-react";
 import { clsx } from "clsx";
 import {
   DndContext,
@@ -29,6 +29,8 @@ interface SlideListProps {
   onAdd: () => void;
   onDelete: (id: string) => void;
   onReorder: (dragIndex: number, hoverIndex: number) => void;
+  onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onExport: () => void;
 }
 
 interface SortableSlideProps {
@@ -116,6 +118,8 @@ export const SlideList: React.FC<SlideListProps> = ({
   onAdd,
   onDelete,
   onReorder,
+  onImport,
+  onExport,
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -138,9 +142,11 @@ export const SlideList: React.FC<SlideListProps> = ({
     }
   }
 
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   return (
-    <div className="flex flex-col h-full bg-(--color-surface) border-r-4 border-(--color-border) w-72">
-      <div className="h-16 px-4 border-b-4 border-(--color-border) flex items-center justify-between bg-(--color-panel)">
+    <div className="flex flex-col h-full bg-(--color-surface) border-r-4 border-(--color-border) w-80">
+      <div className="p-4 border-b-4 border-(--color-border) bg-(--color-panel) flex flex-col gap-3">
         <input
           type="text"
           aria-label="Presentation name"
@@ -151,15 +157,40 @@ export const SlideList: React.FC<SlideListProps> = ({
             onRenamePresentation(trimmed.length === 0 ? "Slides" : trimmed);
           }}
           placeholder="Slides"
-          className="font-bold text-(--color-text) uppercase tracking-wider bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-(--color-accent) px-2 -mx-2 py-1"
+          className="w-full font-bold text-(--color-text) uppercase tracking-wider bg-(--color-surface) border-2 border-(--color-border) focus:outline-none focus:ring-2 focus:ring-(--color-accent) px-3 py-2 shadow-[3px_3px_0px_0px_var(--shadow-soft)]"
         />
-        <button
-          onClick={onAdd}
-          className="p-2 bg-(--color-positive) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-text) hover:text-(--color-positive) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
-          title="Add Slide"
-        >
-          <Plus size={20} strokeWidth={3} />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={onAdd}
+            className="flex-1 flex items-center justify-center gap-2 p-2 bg-(--color-positive) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-text) hover:text-(--color-positive) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            title="Add Slide"
+          >
+            <Plus size={16} strokeWidth={3} />
+            <span className="text-xs">ADD</span>
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={onImport}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="p-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            title="Import JSON"
+          >
+            <Upload size={16} strokeWidth={3} />
+          </button>
+          <button
+            onClick={onExport}
+            className="p-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            title="Export JSON"
+          >
+            <Download size={16} strokeWidth={3} />
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-(--color-panel)">
