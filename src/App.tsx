@@ -47,6 +47,10 @@ function App() {
     "presento-slides",
     INITIAL_SLIDES
   );
+  const [presentationName, setPresentationName] = useLocalStorage<string>(
+    "presento-name",
+    "Slides"
+  );
   const [activeSlideId, setActiveSlideId] = useState<string>(
     () => slides[0]?.id ?? INITIAL_SLIDES[0].id
   );
@@ -100,9 +104,17 @@ function App() {
   }, [activeSlideIndex, slides]);
 
   const handleExportSlides = () => {
+    const safeName = presentationName.trim() || "Slides";
+    const slug = safeName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 50) || "slides";
+    const exportDate = new Date().toISOString().split("T")[0];
     const payload = {
       version: 1,
       exportedAt: new Date().toISOString(),
+      name: safeName,
       slides,
     };
 
@@ -112,9 +124,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const downloadLink = document.createElement("a");
     downloadLink.href = url;
-    downloadLink.download = `presento-slides-${
-      new Date().toISOString().split("T")[0]
-    }.json`;
+    downloadLink.download = `presento-${slug}-${exportDate}.json`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
@@ -145,6 +155,10 @@ function App() {
 
       setSlides(sanitizedSlides);
       setActiveSlideId(sanitizedSlides[0].id);
+      if (typeof parsed?.name === "string") {
+        const trimmedName = parsed.name.trim();
+        setPresentationName(trimmedName.length === 0 ? "Slides" : trimmedName);
+      }
     } catch (error) {
       console.error(error);
       window.alert(
@@ -232,6 +246,8 @@ function App() {
     <div className="flex h-screen bg-(--color-bg) text-(--color-text) overflow-hidden font-mono">
       <SlideList
         slides={slides}
+        presentationName={presentationName}
+        onRenamePresentation={(name) => setPresentationName(name)}
         activeSlideId={activeSlideId}
         onSelect={setActiveSlideId}
         onAdd={handleAddSlide}

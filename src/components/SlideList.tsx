@@ -22,6 +22,8 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 interface SlideListProps {
   slides: Slide[];
+  presentationName: string;
+  onRenamePresentation: (name: string) => void;
   activeSlideId: string;
   onSelect: (id: string) => void;
   onAdd: () => void;
@@ -107,6 +109,8 @@ const SortableSlide: React.FC<SortableSlideProps> = ({
 
 export const SlideList: React.FC<SlideListProps> = ({
   slides,
+  presentationName,
+  onRenamePresentation,
   activeSlideId,
   onSelect,
   onAdd,
@@ -137,9 +141,18 @@ export const SlideList: React.FC<SlideListProps> = ({
   return (
     <div className="flex flex-col h-full bg-(--color-surface) border-r-4 border-(--color-border) w-72">
       <div className="h-16 px-4 border-b-4 border-(--color-border) flex items-center justify-between bg-(--color-panel)">
-        <h2 className="font-bold text-(--color-text) uppercase tracking-wider">
-          Slides
-        </h2>
+        <input
+          type="text"
+          aria-label="Presentation name"
+          value={presentationName}
+          onChange={(event) => onRenamePresentation(event.target.value)}
+          onBlur={() => {
+            const trimmed = presentationName.trim();
+            onRenamePresentation(trimmed.length === 0 ? "Slides" : trimmed);
+          }}
+          placeholder="Slides"
+          className="font-bold text-(--color-text) uppercase tracking-wider bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-(--color-accent) px-2 -mx-2 py-1"
+        />
         <button
           onClick={onAdd}
           className="p-2 bg-(--color-positive) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-text) hover:text-(--color-positive) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"

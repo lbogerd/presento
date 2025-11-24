@@ -6,7 +6,13 @@ Presento now lets you move slide decks between machines without leaving the brow
 
 - **Export:** In the app toolbar, click `Export JSON` to download the current slides as a timestamped `.json` file.
 - **Import:** Click `Import JSON`, pick a file that was previously exported, and Presento will replace the current deck (IDs are regenerated if missing).
-- The downloaded file includes a `version`, `exportedAt`, and the `slides` payload so you can also share it manually or keep it in source control.
+- The downloaded file includes a `version`, `exportedAt`, the presentation `name`, and the `slides` payload so you can also share it manually or keep it in source control.
+- Filenames include your deck name (e.g. `presento-demo-talk-2025-11-24.json`) so exported copies stay organized.
+
+## Presentation Naming
+
+- Rename a deck directly from the sidebar by editing the text input next to the slide add button (defaults to `Slides`).
+- Names are persisted in local storage and bundled into exported JSON, so collaborators see the same title when they import the file.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
