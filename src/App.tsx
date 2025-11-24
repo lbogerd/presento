@@ -1,7 +1,8 @@
-import { useState, type ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Editor } from "./components/Editor";
 import { Presenter } from "./components/Presenter";
+import { Home } from "./components/Home";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { Slide } from "./types";
 
@@ -44,9 +45,6 @@ function App() {
     "presento-name",
     "Slides"
   );
-  const [activeSlideId, setActiveSlideId] = useState<string>(
-    () => slides[0]?.id ?? INITIAL_SLIDES[0].id
-  );
 
   const handleAddSlide = () => {
     const newSlide: Slide = {
@@ -56,7 +54,6 @@ function App() {
       content: "",
     };
     setSlides([...slides, newSlide]);
-    setActiveSlideId(newSlide.id);
   };
 
   const handleUpdateSlide = (updatedSlide: Slide) => {
@@ -67,9 +64,6 @@ function App() {
     if (slides.length <= 1) return; // Prevent deleting last slide
     const newSlides = slides.filter((s) => s.id !== id);
     setSlides(newSlides);
-    if (activeSlideId === id) {
-      setActiveSlideId(newSlides[0].id);
-    }
   };
 
   const handleReorder = (dragIndex: number, hoverIndex: number) => {
@@ -131,7 +125,6 @@ function App() {
       }));
 
       setSlides(sanitizedSlides);
-      setActiveSlideId(sanitizedSlides[0].id);
       if (typeof parsed?.name === "string") {
         const trimmedName = parsed.name.trim();
         setPresentationName(trimmedName.length === 0 ? "Slides" : trimmedName);
@@ -148,15 +141,14 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route
-        path="/"
+        path="/edit/:slideIndex"
         element={
           <Editor
             slides={slides}
             presentationName={presentationName}
-            activeSlideId={activeSlideId}
             onRenamePresentation={setPresentationName}
-            onSelect={setActiveSlideId}
             onAdd={handleAddSlide}
             onDelete={handleDeleteSlide}
             onReorder={handleReorder}
@@ -166,14 +158,10 @@ function App() {
           />
         }
       />
+      <Route path="/edit" element={<Navigate to="/edit/1" replace />} />
       <Route
         path="/view/:slideIndex"
-        element={
-          <Presenter
-            slides={slides}
-            onSlideChange={setActiveSlideId}
-          />
-        }
+        element={<Presenter slides={slides} />}
       />
       <Route path="/view" element={<Navigate to="/view/1" replace />} />
     </Routes>

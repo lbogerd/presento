@@ -13,10 +13,12 @@ interface PresenterProps {
 export function Presenter({ slides, onSlideChange }: PresenterProps) {
   const navigate = useNavigate();
   const { slideIndex } = useParams();
-  
+
   const parsedIndex = parseInt(slideIndex || "1", 10);
-  const currentIndex = isNaN(parsedIndex) ? 0 : Math.max(0, Math.min(parsedIndex - 1, slides.length - 1));
-  
+  const currentIndex = isNaN(parsedIndex)
+    ? 0
+    : Math.max(0, Math.min(parsedIndex - 1, slides.length - 1));
+
   const activeSlide = slides[currentIndex];
 
   // Sync active slide back to parent if needed
