@@ -32,14 +32,16 @@ export function Editor({
 }: EditorProps) {
   const navigate = useNavigate();
   const { slideIndex } = useParams();
-  
+
   const parsedIndex = parseInt(slideIndex || "1", 10);
-  const currentIndex = isNaN(parsedIndex) ? 0 : Math.max(0, Math.min(parsedIndex - 1, slides.length - 1));
+  const currentIndex = isNaN(parsedIndex)
+    ? 0
+    : Math.max(0, Math.min(parsedIndex - 1, slides.length - 1));
   const activeSlide = slides[currentIndex];
   const activeSlideId = activeSlide?.id;
 
   const handleSelect = (id: string) => {
-    const index = slides.findIndex(s => s.id === id);
+    const index = slides.findIndex((s) => s.id === id);
     if (index !== -1) {
       navigate(`/edit/${index + 1}`);
     }
@@ -55,21 +57,22 @@ export function Editor({
 
   const handleDelete = (id: string) => {
     if (slides.length <= 1) return;
-    
-    const indexToDelete = slides.findIndex(s => s.id === id);
+
+    const indexToDelete = slides.findIndex((s) => s.id === id);
     if (indexToDelete === -1) return;
 
     // If we are deleting the active slide, we need to navigate
     if (id === activeSlideId) {
       // If deleting the last slide, go to the previous one
       // Otherwise stay at the current index (which will be the next slide after deletion)
-      const newIndex = indexToDelete === slides.length - 1 ? indexToDelete : indexToDelete + 1;
+      const newIndex =
+        indexToDelete === slides.length - 1 ? indexToDelete : indexToDelete + 1;
       navigate(`/edit/${newIndex}`);
     } else if (indexToDelete < currentIndex) {
       // If deleting a slide before the current one, the current index shifts down
       navigate(`/edit/${currentIndex}`);
     }
-    
+
     onDelete(id);
   };
 

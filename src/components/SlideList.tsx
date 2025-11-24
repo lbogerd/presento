@@ -77,7 +77,7 @@ const SortableSlide: React.FC<SortableSlideProps> = ({
         "group relative flex items-center gap-3 p-3 cursor-pointer transition-none border-2",
         activeSlideId === slide.id
           ? "bg-(--color-accent) border-(--color-border) text-(--color-text) shadow-[4px_4px_0px_0px_var(--shadow-strong)] -translate-x-0.5 -translate-y-0.5"
-          : "bg-(--color-surface) border-(--color-border) text-(--color-text) hover:bg-(--color-panel) hover:shadow-[4px_4px_0px_0px_var(--shadow-soft)] hover:-translate-x-0.5 hover:-translate-y-0.5"
+          : "bg-(--color-surface) border-(--color-border) text-(--color-text) hover:bg-(--color-panel) hover:shadow-[4px_4px_0px_0px_var(--shadow-soft)] hover:-translate-x-0.5 hover:-translate-y-0.5",
       )}
     >
       <span
@@ -85,7 +85,7 @@ const SortableSlide: React.FC<SortableSlideProps> = ({
           "text-xs font-bold font-mono w-6 h-6 flex items-center justify-center border-2 border-(--color-border)",
           activeSlideId === slide.id
             ? "bg-(--color-text) text-(--color-surface)"
-            : "bg-(--color-surface-muted) text-(--color-text)"
+            : "bg-(--color-surface-muted) text-(--color-text)",
         )}
       >
         {index + 1}
@@ -131,7 +131,7 @@ export const SlideList: React.FC<SlideListProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   function handleDragEnd(event: DragEndEvent) {

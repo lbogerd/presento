@@ -13,7 +13,7 @@ export function Home() {
             <Presentation size={48} strokeWidth={2} />
           </div>
         </div>
-        
+
         <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">
           Presento
         </h1>
@@ -22,14 +22,14 @@ export function Home() {
         </p>
 
         <div className="space-y-4">
-          <Button 
-            onClick={() => navigate("/edit/1")} 
+          <Button
+            onClick={() => navigate("/edit/1")}
             className="w-full py-6 text-lg uppercase"
           >
             Open Presentation
           </Button>
-          
-          <Button 
+
+          <Button
             variant="secondary"
             className="w-full py-6 text-lg uppercase"
             disabled

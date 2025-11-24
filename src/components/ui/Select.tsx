@@ -17,7 +17,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           "w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text)",
           "focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text)",
           "transition-none appearance-none cursor-pointer",
-          className
+          className,
         )}
         ref={ref}
         {...props}
@@ -25,6 +25,6 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {children}
       </select>
     );
-  }
+  },
 );
 Select.displayName = "Select";

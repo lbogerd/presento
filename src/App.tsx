@@ -39,11 +39,11 @@ function hello() {
 function App() {
   const [slides, setSlides] = useLocalStorage<Slide[]>(
     "presento-slides",
-    INITIAL_SLIDES
+    INITIAL_SLIDES,
   );
   const [presentationName, setPresentationName] = useLocalStorage<string>(
     "presento-name",
-    "Slides"
+    "Slides",
   );
 
   const handleAddSlide = () => {
@@ -112,8 +112,8 @@ function App() {
       const importedSlides = Array.isArray(parsed)
         ? parsed
         : Array.isArray(parsed.slides)
-        ? parsed.slides
-        : null;
+          ? parsed.slides
+          : null;
 
       if (!importedSlides || importedSlides.length === 0) {
         throw new Error("No slides found in file");
@@ -132,7 +132,7 @@ function App() {
     } catch (error) {
       console.error(error);
       window.alert(
-        "Failed to import slides. Please verify the JSON file and try again."
+        "Failed to import slides. Please verify the JSON file and try again.",
       );
     } finally {
       event.target.value = "";
@@ -159,10 +159,7 @@ function App() {
         }
       />
       <Route path="/edit" element={<Navigate to="/edit/1" replace />} />
-      <Route
-        path="/view/:slideIndex"
-        element={<Presenter slides={slides} />}
-      />
+      <Route path="/view/:slideIndex" element={<Presenter slides={slides} />} />
       <Route path="/view" element={<Navigate to="/view/1" replace />} />
     </Routes>
   );

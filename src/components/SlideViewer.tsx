@@ -76,8 +76,8 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
                     slide.imageFit === "cover"
                       ? "object-cover"
                       : slide.imageFit === "fill"
-                      ? "object-fill"
-                      : "object-contain"
+                        ? "object-fill"
+                        : "object-contain",
                   )}
                 />
               </div>
@@ -118,7 +118,7 @@ export const SlideViewer: React.FC<SlideViewerProps> = ({
         baseClasses,
         isActive
           ? "opacity-100 scale-100"
-          : "opacity-0 scale-95 absolute inset-0 pointer-events-none"
+          : "opacity-0 scale-95 absolute inset-0 pointer-events-none",
       )}
     >
       {renderContent()}
