@@ -1,11 +1,9 @@
-import { useState, useEffect, useCallback, type ChangeEvent } from "react";
-import { SlideViewer } from "./components/SlideViewer";
-import { SlideEditor } from "./components/SlideEditor";
-import { SlideList } from "./components/SlideList";
+import { useState, type ChangeEvent } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Editor } from "./components/Editor";
+import { Presenter } from "./components/Presenter";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { Slide } from "./types";
-import { Play, X } from "lucide-react";
-import { Button } from "./components/ui/Button";
 
 const INITIAL_SLIDES: Slide[] = [
   {
@@ -49,10 +47,6 @@ function App() {
   const [activeSlideId, setActiveSlideId] = useState<string>(
     () => slides[0]?.id ?? INITIAL_SLIDES[0].id
   );
-  const [isPresenting, setIsPresenting] = useState(false);
-
-  const activeSlideIndex = slides.findIndex((s) => s.id === activeSlideId);
-  const activeSlide = slides[activeSlideIndex];
 
   const handleAddSlide = () => {
     const newSlide: Slide = {
@@ -84,18 +78,6 @@ function App() {
     newSlides.splice(hoverIndex, 0, removed);
     setSlides(newSlides);
   };
-
-  const nextSlide = useCallback(() => {
-    if (activeSlideIndex < slides.length - 1) {
-      setActiveSlideId(slides[activeSlideIndex + 1].id);
-    }
-  }, [activeSlideIndex, slides]);
-
-  const prevSlide = useCallback(() => {
-    if (activeSlideIndex > 0) {
-      setActiveSlideId(slides[activeSlideIndex - 1].id);
-    }
-  }, [activeSlideIndex, slides]);
 
   const handleExportSlides = () => {
     const safeName = presentationName.trim() || "Slides";
@@ -164,135 +146,37 @@ function App() {
     }
   };
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === "Space") {
-        if (isPresenting) nextSlide();
-      } else if (e.key === "ArrowLeft") {
-        if (isPresenting) prevSlide();
-      } else if (e.key === "Escape") {
-        setIsPresenting(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isPresenting, nextSlide, prevSlide]);
-
-  if (isPresenting) {
-    return (
-      <div className="fixed inset-0 bg-(--color-surface) text-(--color-text) z-50 flex flex-col font-mono">
-        {/* Main Slide Area */}
-        <div className="flex-1 relative overflow-hidden">
-          {activeSlide && <SlideViewer slide={activeSlide} isActive={true} />}
-        </div>
-
-        {/* Progress Bar */}
-        <div className="h-2 bg-(--color-surface-muted) w-full border-t-4 border-(--color-border)">
-          <div
-            className="h-full bg-(--color-accent)"
-            style={{
-              width: `${((activeSlideIndex + 1) / slides.length) * 100}%`,
-            }}
-          />
-        </div>
-
-        {/* Bottom Control Bar */}
-        <div className="h-20 bg-(--color-surface) border-t-4 border-(--color-border) flex items-center justify-between px-6 shrink-0">
-          {/* Left: Slide Counter */}
-          <div className="font-bold text-xl text-(--color-text)">
-            SLIDE {activeSlideIndex + 1}{" "}
-            <span className="text-(--color-text-muted)">/ {slides.length}</span>
-          </div>
-
-          {/* Center: Controls */}
-          <div className="flex gap-4">
-            <Button
-              onClick={prevSlide}
-              disabled={activeSlideIndex === 0}
-              variant="secondary"
-              className="px-6"
-            >
-              PREV
-            </Button>
-            <Button
-              onClick={nextSlide}
-              disabled={activeSlideIndex === slides.length - 1}
-              variant="secondary"
-              className="px-6"
-            >
-              NEXT
-            </Button>
-          </div>
-
-          {/* Right: Exit */}
-          <Button onClick={() => setIsPresenting(false)} variant="danger">
-            <X size={20} strokeWidth={3} />
-            EXIT
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex h-screen bg-(--color-bg) text-(--color-text) overflow-hidden font-mono">
-      <SlideList
-        slides={slides}
-        presentationName={presentationName}
-        onRenamePresentation={(name) => setPresentationName(name)}
-        activeSlideId={activeSlideId}
-        onSelect={setActiveSlideId}
-        onAdd={handleAddSlide}
-        onDelete={handleDeleteSlide}
-        onReorder={handleReorder}
-        onImport={handleImportSlides}
-        onExport={handleExportSlides}
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Editor
+            slides={slides}
+            presentationName={presentationName}
+            activeSlideId={activeSlideId}
+            onRenamePresentation={setPresentationName}
+            onSelect={setActiveSlideId}
+            onAdd={handleAddSlide}
+            onDelete={handleDeleteSlide}
+            onReorder={handleReorder}
+            onImport={handleImportSlides}
+            onExport={handleExportSlides}
+            onUpdate={handleUpdateSlide}
+          />
+        }
       />
-
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Toolbar */}
-        <div className="h-16 border-b-4 border-(--color-border) flex items-center justify-between px-6 bg-(--color-surface)">
-          <h1 className="font-black text-2xl uppercase tracking-tighter">
-            Presento
-          </h1>
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => setIsPresenting(true)}
-              variant="danger"
-              className="uppercase px-6"
-            >
-              <Play size={16} strokeWidth={3} />
-              Present
-            </Button>
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Slide Preview */}
-          <div className="flex-1 bg-(--color-surface-muted) p-8 flex items-center justify-center overflow-hidden relative">
-            <div className="aspect-video w-full max-w-5xl bg-(--color-surface) border-4 border-(--color-border) shadow-[12px_12px_0px_0px_var(--shadow-strong)] overflow-hidden relative">
-              {activeSlide ? (
-                <SlideViewer slide={activeSlide} isActive={true} />
-              ) : (
-                <div className="flex items-center justify-center h-full text-(--color-text-muted) font-bold uppercase">
-                  Select a slide to edit
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Editor Sidebar */}
-          <div className="w-96 border-l-4 border-(--color-border) bg-(--color-surface)">
-            {activeSlide && (
-              <SlideEditor slide={activeSlide} onUpdate={handleUpdateSlide} />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+      <Route
+        path="/view/:slideIndex"
+        element={
+          <Presenter
+            slides={slides}
+            onSlideChange={setActiveSlideId}
+          />
+        }
+      />
+      <Route path="/view" element={<Navigate to="/view/1" replace />} />
+    </Routes>
   );
 }
 
