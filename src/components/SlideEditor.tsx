@@ -1,6 +1,10 @@
 import React from "react";
 import type { Slide, SlideLayout } from "../types";
 import { Layout, Type, Image, Code } from "lucide-react";
+import { Input } from "./ui/Input";
+import { Label } from "./ui/Label";
+import { Select } from "./ui/Select";
+import { Textarea } from "./ui/Textarea";
 
 interface SlideEditorProps {
   slide: Slide;
@@ -33,9 +37,7 @@ export const SlideEditor: React.FC<SlideEditorProps> = ({
   return (
     <div className="p-6 space-y-6 bg-(--color-surface) h-full overflow-y-auto">
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-          Layout
-        </label>
+        <Label>Layout</Label>
         <div className="grid grid-cols-4 gap-2">
           {[
             { id: "title", icon: Type, label: "Title" },
@@ -61,14 +63,11 @@ export const SlideEditor: React.FC<SlideEditorProps> = ({
       </div>
 
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-          Title
-        </label>
-        <input
+        <Label>Title</Label>
+        <Input
           type="text"
           value={slide.title || ""}
           onChange={(e) => handleChange("title", e.target.value)}
-          className="w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text) focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text) transition-none placeholder:text-gray-500"
           placeholder="SLIDE TITLE"
         />
       </div>
@@ -76,38 +75,30 @@ export const SlideEditor: React.FC<SlideEditorProps> = ({
       {slide.layout === "image-center" && (
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-              Image URL
-            </label>
-            <input
+            <Label>Image URL</Label>
+            <Input
               type="text"
               value={slide.image || ""}
               onChange={(e) => handleChange("image", e.target.value)}
-              className="w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text) focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text) transition-none placeholder:text-gray-500"
               placeholder="https://example.com/image.jpg"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-                Fit
-              </label>
-              <select
+              <Label>Fit</Label>
+              <Select
                 value={slide.imageFit || "contain"}
                 onChange={(e) => handleChange("imageFit", e.target.value)}
-                className="w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text) focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text) transition-none appearance-none cursor-pointer"
               >
                 <option value="contain">CONTAIN</option>
                 <option value="cover">COVER</option>
                 <option value="fill">FILL</option>
-              </select>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-                Scale ({slide.imageScale || 100}%)
-              </label>
+              <Label>Scale ({slide.imageScale || 100}%)</Label>
               <input
                 type="range"
                 min="10"
@@ -126,40 +117,36 @@ export const SlideEditor: React.FC<SlideEditorProps> = ({
 
       {slide.layout === "code" ? (
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-            Code
-          </label>
-          <textarea
+          <Label>Code</Label>
+          <Textarea
             value={slide.code || ""}
             onChange={(e) => handleChange("code", e.target.value)}
-            className="w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text) focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text) transition-none font-mono text-sm h-48 placeholder:text-gray-500"
+            className="font-mono text-sm h-48"
             placeholder="// Enter code here..."
           />
         </div>
       ) : (
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
+          <Label>
             {slide.layout === "bullets"
               ? "Bullet Points (one per line)"
               : "Content"}
-          </label>
-          <textarea
+          </Label>
+          <Textarea
             value={getContentValue()}
             onChange={(e) => handleContentChange(e.target.value)}
-            className="w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text) focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text) transition-none h-32 placeholder:text-gray-500"
+            className="h-32"
             placeholder="Slide content..."
           />
         </div>
       )}
 
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-(--color-text) mb-2">
-          Speaker Notes
-        </label>
-        <textarea
+        <Label>Speaker Notes</Label>
+        <Textarea
           value={slide.notes || ""}
           onChange={(e) => handleChange("notes", e.target.value)}
-          className="w-full px-3 py-2 border-2 border-(--color-border) bg-(--color-surface) text-(--color-text) focus:outline-none focus:bg-(--color-accent) focus:text-(--color-text) transition-none h-24 text-sm placeholder:text-gray-500"
+          className="h-24 text-sm"
           placeholder="Private notes for the presenter..."
         />
       </div>

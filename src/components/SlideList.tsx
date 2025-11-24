@@ -19,6 +19,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { Button } from "./ui/Button";
+import { Input } from "./ui/Input";
 
 interface SlideListProps {
   slides: Slide[];
@@ -147,7 +149,7 @@ export const SlideList: React.FC<SlideListProps> = ({
   return (
     <div className="flex flex-col h-full bg-(--color-surface) border-r-4 border-(--color-border) w-80">
       <div className="p-4 border-b-4 border-(--color-border) bg-(--color-panel) flex flex-col gap-3">
-        <input
+        <Input
           type="text"
           aria-label="Presentation name"
           value={presentationName}
@@ -157,17 +159,13 @@ export const SlideList: React.FC<SlideListProps> = ({
             onRenamePresentation(trimmed.length === 0 ? "Slides" : trimmed);
           }}
           placeholder="Slides"
-          className="w-full font-bold text-(--color-text) uppercase tracking-wider bg-(--color-surface) border-2 border-(--color-border) focus:outline-none focus:ring-2 focus:ring-(--color-accent) px-3 py-2 shadow-[3px_3px_0px_0px_var(--shadow-soft)]"
+          className="font-bold uppercase tracking-wider shadow-[3px_3px_0px_0px_var(--shadow-soft)] focus:bg-(--color-surface) focus:ring-2 focus:ring-(--color-accent)"
         />
         <div className="flex gap-2">
-          <button
-            onClick={onAdd}
-            className="flex-1 flex items-center justify-center gap-2 p-2 bg-(--color-positive) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-text) hover:text-(--color-positive) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
-            title="Add Slide"
-          >
+          <Button onClick={onAdd} className="flex-1" title="Add Slide">
             <Plus size={16} strokeWidth={3} />
             <span className="text-xs">ADD</span>
-          </button>
+          </Button>
 
           <input
             ref={fileInputRef}
@@ -176,20 +174,22 @@ export const SlideList: React.FC<SlideListProps> = ({
             className="hidden"
             onChange={onImport}
           />
-          <button
+          <Button
             onClick={() => fileInputRef.current?.click()}
-            className="p-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            variant="secondary"
+            size="icon"
             title="Import JSON"
           >
             <Upload size={16} strokeWidth={3} />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onExport}
-            className="p-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) hover:bg-(--color-surface-muted) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+            variant="secondary"
+            size="icon"
             title="Export JSON"
           >
             <Download size={16} strokeWidth={3} />
-          </button>
+          </Button>
         </div>
       </div>
 

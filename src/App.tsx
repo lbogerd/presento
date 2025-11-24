@@ -1,16 +1,11 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  type ChangeEvent,
-} from "react";
+import { useState, useEffect, useCallback, type ChangeEvent } from "react";
 import { SlideViewer } from "./components/SlideViewer";
 import { SlideEditor } from "./components/SlideEditor";
 import { SlideList } from "./components/SlideList";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { Slide } from "./types";
 import { Play, X } from "lucide-react";
+import { Button } from "./components/ui/Button";
 
 const INITIAL_SLIDES: Slide[] = [
   {
@@ -213,30 +208,29 @@ function App() {
 
           {/* Center: Controls */}
           <div className="flex gap-4">
-            <button
+            <Button
               onClick={prevSlide}
               disabled={activeSlideIndex === 0}
-              className="px-6 py-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-panel) disabled:opacity-50 disabled:cursor-not-allowed transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+              variant="secondary"
+              className="px-6"
             >
               PREV
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={nextSlide}
               disabled={activeSlideIndex === slides.length - 1}
-              className="px-6 py-2 bg-(--color-surface) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-panel) disabled:opacity-50 disabled:cursor-not-allowed transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
+              variant="secondary"
+              className="px-6"
             >
               NEXT
-            </button>
+            </Button>
           </div>
 
           {/* Right: Exit */}
-          <button
-            onClick={() => setIsPresenting(false)}
-            className="flex items-center gap-2 px-4 py-2 bg-(--color-danger) border-2 border-(--color-border) text-(--color-text) font-bold hover:bg-(--color-text) hover:text-(--color-danger) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer"
-          >
+          <Button onClick={() => setIsPresenting(false)} variant="danger">
             <X size={20} strokeWidth={3} />
             EXIT
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -264,13 +258,14 @@ function App() {
             Presento
           </h1>
           <div className="flex items-center gap-2">
-            <button
+            <Button
               onClick={() => setIsPresenting(true)}
-              className="flex items-center gap-2 px-6 py-2 bg-(--color-danger) border-2 border-(--color-border) text-(--color-text) font-bold uppercase hover:bg-(--color-text) hover:text-(--color-danger) transition-none shadow-[3px_3px_0px_0px_var(--shadow-strong)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_var(--shadow-soft)] cursor-pointer"
+              variant="danger"
+              className="uppercase px-6"
             >
               <Play size={16} strokeWidth={3} />
               Present
-            </button>
+            </Button>
           </div>
         </div>
 
