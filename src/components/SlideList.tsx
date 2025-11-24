@@ -136,7 +136,7 @@ export const SlideList: React.FC<SlideListProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-(--color-surface) border-r-4 border-(--color-border) w-72">
-      <div className="p-4 border-b-4 border-(--color-border) flex justify-between items-center bg-(--color-panel)">
+      <div className="h-16 px-4 border-b-4 border-(--color-border) flex items-center justify-between bg-(--color-panel)">
         <h2 className="font-bold text-(--color-text) uppercase tracking-wider">
           Slides
         </h2>
