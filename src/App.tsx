@@ -105,11 +105,12 @@ function App() {
 
   const handleExportSlides = () => {
     const safeName = presentationName.trim() || "Slides";
-    const slug = safeName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/gi, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 50) || "slides";
+    const slug =
+      safeName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 50) || "slides";
     const exportDate = new Date().toISOString().split("T")[0];
     const payload = {
       version: 1,
